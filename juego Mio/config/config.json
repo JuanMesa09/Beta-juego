@@ -1,0 +1,39 @@
+
+
+{   
+    "lvl_1": {
+        "nivel":{  
+        "fondo": "./image/img_fondo/goku_house.png",
+        "musica_fondo": "sounds/musica lvl.mp3",
+        "maximo_enemigos": 0,
+        "puntos_vida_enemigo": "valor",
+        "cantidad_vidas": "valor",
+        "tiempo_total": "valor"
+
+    },
+    "jugador":{
+
+        "imagen_jugador": "image",
+        "poder_salto": "valor",
+        "gravedad": "valor",
+        "velocidad_caminar": "valor",
+        "vidas": "valor",
+        "fotogramas": "valor",
+        "foto_tiros": "valor",
+        "enfriamiento_tiros": "valor"
+
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+}
