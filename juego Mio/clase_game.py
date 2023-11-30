@@ -1,8 +1,10 @@
+
 import pygame as pg 
 from constantes import *
 from clase_jugador import Jugador
 from clase_estructura import Estructura
 from clase_nivel import Nivel
+from clase_enemigo import Enemy  
 
 class Game():
     def __init__(self) -> None:
@@ -31,6 +33,8 @@ class Game():
         estructura1 = Estructura(100, 250, 50, 50, './image/img_plataformas/plataforma_1.png')
         estructura2 = Estructura(300, 250, 50, 50, './image/img_plataformas/plataforma_1.png')
 
+        enemigo = Enemy(200, 200, frame_rate=100, velocidad_caminar=2, velocidad_ataque=10, move_frame_rate=100)
+
         while juego_ejecutandose:
             delta_ms = clock.tick(FPS)
             pg.time.delay(20)
@@ -57,7 +61,9 @@ class Game():
 
             if vegeta._Jugador__is_jumping:
                 vegeta.jump()
-            
+
+            enemigo.actualizar_estado(delta_ms)
+
             screen.blit(back_img, back_img.get_rect())
             estructura1.draw(screen)
             estructura2.draw(screen)
@@ -72,7 +78,10 @@ class Game():
             vegeta.do_animation(delta_ms)
             vegeta.do_movement(delta_ms)
             bullet_group.update()
+
+            enemigo.draw(screen)
+
             pg.display.update()
         
         juego.stop_music() 
-    pg.quit()
+        pg.quit()

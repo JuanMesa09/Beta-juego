@@ -1,14 +1,16 @@
+
+
 import pygame as pg
 
-
-class Estructura:
+class Estructura(pg.sprite.Sprite):
     def __init__(self, x, y, width, height, image_path):
-        self.__rect = pg.Rect(x, y, width, height)
-        self.__image = pg.image.load(image_path)
-        self.__image = pg.transform.scale(self.__image, (width, height))  # Escalamos la imagen según el tamaño proporcionado
+        super().__init__()
+        self.image = pg.image.load(image_path)
+        self.image = pg.transform.scale(self.image, (width, height))
+        self.rect = self.image.get_rect(topleft=(x, y))
 
     def get_rect(self):
-        return self.__rect
+        return self.rect
 
     def draw(self, screen):
-        screen.blit(self.__image, self.__rect)
+        screen.blit(self.image, self.rect)
