@@ -9,12 +9,12 @@ class Jugador():
     def __init__(self, posicion_x, posicion_y, velocidad_caminar, bala_grupo,cuadros_por_segundo):
         super().__init__()
         self.vidas = 3
-        self.parado_derecha = sf.get_surface_from_spritesheet('./imagenes/img_jugador/standar/paradito_derecha_1.png', 1, 7)
-        self.parado_izquierda = sf.get_surface_from_spritesheet('./imagenes/img_jugador/standar/paradito_derecha_1.png', 1, 7, flip=True)
-        self.correr_derecha = sf.get_surface_from_spritesheet('./imagenes/img_jugador/andar/correr_derecha.png', 1, 8)
-        self.correr_izquierda = sf.get_surface_from_spritesheet('./imagenes/img_jugador/andar/correr_derecha.png', 1, 8, flip= True)
+        self.parado_derecha = sf.get_surface_from_spritesheet('./imagenes/img_jugador/standar/paradito_derecha_1.png', 7, 1)
+        self.parado_izquierda = sf.get_surface_from_spritesheet('./imagenes/img_jugador/standar/paradito_derecha_1.png', 7, 1, flip=True)
+        self.correr_derecha = sf.get_surface_from_spritesheet('./imagenes/img_jugador/andar/correr_derecha.png', 8, 1)
+        self.correr_izquierda = sf.get_surface_from_spritesheet('./imagenes/img_jugador/andar/correr_derecha.png', 8, 1, flip= True)
         self.suelo = ALTO_VENTANA
-        self.gravedad = 1
+        self.gravedad = 5
         self.inicio = self.parado_derecha
         self.marco_inicial = 0
         self.actual_animacion = self.parado_derecha
@@ -38,24 +38,30 @@ class Jugador():
         self.cuadros_por_segundo = cuadros_por_segundo
         self.jugador_tiempo_animacion = 0
         self.animacion_disparo = False
+        self.tiempo_de_movimiento = 0
     
     def animaciones_enx_presstablecidas(self,movimiento_en_x,lista_animaciones:[pg.surface.Surface], bandera_mirando_derecha):
-        self.vel_x = movimiento_en_x
+        self.rect.x += movimiento_en_x
         self.actual_animacion = lista_animaciones
         self.mirando_derecha = bandera_mirando_derecha
         
     def caminar(self, direccion):
         
+        match direccion:
 
-        if self.direccion == "derecha":
-            mirando_derecha = True
-            self.animaciones_enx_presstablecidas(self.vel_x, self.correr_derecha, bandera_mirando_derecha=mirando_derecha)
+            case "derecha":
+                mirando_derecha = True
+                self.animaciones_enx_presstablecidas(self.vel_x, self.correr_derecha, bandera_mirando_derecha=mirando_derecha)
+                
+            case "izquierda":
+                mirando_derecha = False
+                self.animaciones_enx_presstablecidas(-self.vel_x, self.correr_izquierda, bandera_mirando_derecha= mirando_derecha)
 
+    def estatico(self):
+        if self.actual_animacion != self.parado_izquierda and self.actual_animacion != self.parado_derecha:
+            self.actual_animacion = self.parado_derecha if self.mirando_derecha else self.parado_izquierda
+            self.cuadro_inicial = 0
             
-        elif self.direccion == "izquierda":
-            mirando_derecha = False
-            self.animaciones_enx_presstablecidas(-self.vel_x, self.correr_izquierda, bandera_mirando_derecha= mirando_derecha)
-
     def salto(self):
 
         if not self.en_el_aire:
@@ -71,14 +77,13 @@ class Jugador():
                 self.rect.y -= self.suelo
                 self.en_el_aire = False
                 self.vel_y -= 0
-    
 
-    def update(self, fotogramas_x_segundo):
-        self.rect.x += self.vel_x
-        self.rect.y += self.vel_y
-        self.gravedad_activa()
+
+    def update(self, delta_ms):
         self.actualizar_cd()
-        self.hacer_animacion(fotogramas_x_segundo)
+        self.hacer_animacion(delta_ms)
+        self.hacer_movimiento(delta_ms)
+        print(f"lista animacion acutal:  {self.actual_animacion}  numero de frame{self.marco_inicial}"  )
     
 
     def crear_proyectil(self):
@@ -117,27 +122,48 @@ class Jugador():
     #         pg.draw.rect(pantalla, 'red', self.rect)
         
     def draw(self, pantalla: pg.surface.Surface):
+        if DEBUG:
+            pg.draw.rect(pantalla, 'red', self.rect)
+        self.actual_animacion_imagen = self.actual_animacion[self.marco_inicial]
         pantalla.blit(self.actual_animacion_imagen, self.rect)
 
-    def hacer_animacion(self, fotograma_x_seg):
-        self.jugador_tiempo_animacion += fotograma_x_seg
+
+    def hacer_animacion(self, delta_ms):
+        self.jugador_tiempo_animacion += delta_ms
         if self.jugador_tiempo_animacion >= self.cuadros_por_segundo:
             self.jugador_tiempo_animacion = 0
             
-
-            if self.animacion_disparo:
-                
-                if self.marco_inicial >= len(self.actual_animacion) - 1:
-                    self.animacion_disparo = False
-                    
-                else:
-                    self.marco_inicial += 1
+            
+            if self.marco_inicial < len(self.actual_animacion) - 1:
+                self.marco_inicial += 1
                     
             else:
-                
-                # Lógica de animación normal
-                if self.marco_inicial < len(self.actual_animacion) - 1:
-                    self.marco_inicial += 1
-                    
-                else:
-                    self.marco_inicial = 0
+                self.marco_inicial = 0
+        
+        
+
+    def hacer_movimiento(self,delta_ms):
+        
+        self.tiempo_de_movimiento += delta_ms
+        if self.tiempo_de_movimiento >= self.marco_inicial:#self.cuadros_por_segundo:
+            self.tiempo_de_movimiento = 0
+            
+
+            if self.rect.y > 300:
+                self.rect.y = 300
+                self.en_el_aire = False
+                self.vel_y = 0
+            
+            #LIMITES para q no se salga
+            if self.rect.left <= -1:
+                self.rect.left = -1
+            elif self.rect.right >= ANCHO_VENTANA + 1:
+                self.rect.right = ANCHO_VENTANA + 1
+            elif self.rect.top <= 0:
+                self.rect.top = 0
+            elif self.rect.bottom >= ALTO_VENTANA + 1:
+                self.rect.bottom = ALTO_VENTANA + 1
+
+
+
+

@@ -29,3 +29,4 @@ class Nivel:
 
     def parar_musica(self):
         pg.mixer.music.stop()
+

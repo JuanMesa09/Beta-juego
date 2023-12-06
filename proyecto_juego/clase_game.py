@@ -32,7 +32,7 @@ class Game():
         fondo = pg.transform.scale(fondo, (ANCHO_VENTANA, ALTO_VENTANA))
         juego_ejecutandose = True
         
-        luffy = Jugador(300, 200, velocidad_caminar=70, bala_grupo=bala_grupo, cuadros_por_segundo= 60)
+        luffy = Jugador(0,ALTO_VENTANA, velocidad_caminar=10, bala_grupo=bala_grupo, cuadros_por_segundo= 60)
 
         
         
@@ -44,13 +44,18 @@ class Game():
         
         while juego_ejecutandose:
             pg.mixer.music.play(-1) 
-            fotograma_x_seg = retardo.tick(FPS)
+            delta_ms = retardo.tick(FPS)
 
             pg.time.delay(30)
 
             for event in pg.event.get():
-
-                
+                if event.type == pg.KEYDOWN:
+                    if event.key == pg.K_SPACE:
+                        luffy.salto()
+                    elif event.key == pg.K_r:
+                        print("piu piu")
+                        # luffy.crear_proyectil()
+                        # nueva_bala = luffy.crear_proyectil()
                 if event.type == pg.QUIT:
                     juego_ejecutandose = False
                     break
@@ -58,42 +63,26 @@ class Game():
             
             lista_teclas_presionadas = pg.key.get_pressed()
             if lista_teclas_presionadas[pg.K_d]:
-                luffy.caminar(4)
+                luffy.caminar('derecha')
             elif lista_teclas_presionadas[pg.K_a]:
-                luffy.caminar(-4)
-            if lista_teclas_presionadas[pg.K_r]:
-                #luffy.crear_proyectil()
-                nueva_bala = luffy.crear_proyectil()
-                if nueva_bala is not None:
-                    bala_grupo.add(nueva_bala)
-            elif lista_teclas_presionadas[pg.K_SPACE]:
-                luffy.salto()
+                luffy.caminar('izquierda')
+            if not lista_teclas_presionadas[pg.K_d] and not lista_teclas_presionadas[pg.K_a]:
+                luffy.estatico()
             
-        
+            
+
             
             pantalla.blit(fondo, fondo.get_rect())
             estructura1.draw(pantalla)
             estructura2.draw(pantalla)
             bala_grupo.draw(pantalla)
             luffy.draw(pantalla)
-            
             enemigo.draw(pantalla)
+            luffy.update(delta_ms)
             bala_grupo.update()
             pg.display.update()
-            luffy.update(fotograma_x_seg)
-
-            # for estructura in [estructura1, estructura2]:
-            #     if luffy.verificar_colision([estructura]):
-            #         luffy.ajustar_a_plataforma(estructura.get_rect())
-
             
-            
-            
-            
-
-            
-        
-        juego.stop_music() 
+        juego.parar_musica() 
     pg.quit()
 
 
