@@ -12,7 +12,7 @@ class Game():
 
     def __init__(self) :
         super().__init__()
-        self.timer = 50
+        
 
     def correr_nivel(self, nombre_nivel):
 
@@ -35,13 +35,17 @@ class Game():
         luffy = Jugador(0,ALTO_VENTANA, velocidad_caminar=10, bala_grupo=bala_grupo, cuadros_por_segundo= 60)
 
         
-        
+        font = pg.font.Font(None, 36)
+        tiempo_duracion_derrota = 4000
         
         estructura1 = Estructura(100, 100, 50, 50, r'./imagenes/img_plataformas/plataforma_1.png')
         estructura2 = Estructura(300, 100, 50, 50, r'./imagenes/img_plataformas/plataforma_1.png')
 
         enemigo = Enemigo((100, 200))
-        
+
+        self.tiempo_inicial = pg.time.get_ticks()//1000 
+        self.duracion_game =  10
+
         while juego_ejecutandose:
             pg.mixer.music.play(-1) 
             delta_ms = retardo.tick(FPS)
@@ -59,8 +63,19 @@ class Game():
                 if event.type == pg.QUIT:
                     juego_ejecutandose = False
                     break
+
+
+            #tiempo transcurrido
+            tiempo_actual =  pg.time.get_ticks() // 1000
+            tiempo_transcurrido = tiempo_actual - self.tiempo_inicial
+            tiempo_restante = max(0, self.duracion_game - tiempo_transcurrido)
             
-            
+            #if tiempo_transcurrido >= self.duracion_game:
+                #pantalla.fill((0, 0, 0))
+                #texto_derrota = font.render(f"Tiempo Terminado DERRORTA", True, (255,255,255))
+                ##pantalla.blit(texto_derrota, (ANCHO_VENTANA // 1 - texto_derrota.get_width() // 1, ALTO_VENTANA // 1 - texto_derrota.get_height() // 1))
+            #else: 
+                #pg.quit()
             lista_teclas_presionadas = pg.key.get_pressed()
             if lista_teclas_presionadas[pg.K_d]:
                 luffy.caminar('derecha')
@@ -69,10 +84,13 @@ class Game():
             if not lista_teclas_presionadas[pg.K_d] and not lista_teclas_presionadas[pg.K_a]:
                 luffy.estatico()
             
+            tiempo_juego = font.render(f"Tiempo Restante {tiempo_restante}", True, (0,0,0))
             
 
             
             pantalla.blit(fondo, fondo.get_rect())
+            pantalla.blit(tiempo_juego,(ANCHO_VENTANA//2, 10))
+            
             estructura1.draw(pantalla)
             estructura2.draw(pantalla)
             bala_grupo.draw(pantalla)
