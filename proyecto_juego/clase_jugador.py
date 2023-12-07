@@ -190,6 +190,18 @@ class Jugador():
                 
         if not teclas[pg.K_d] and not teclas[pg.K_a]:
             self.estatico()
+    def ajustar_a_plataforma(self, platform_rect):
+            # Ajusta la posición y la velocidad vertical del jugador según la plataforma
+            if self.rect.colliderect(platform_rect) and self.rect.y < platform_rect.y:
+                self.rect.y = platform_rect.y - self.rect.height
+                self.vel_y = 0
+            
+            elif self.rect.colliderect(platform_rect) and self.rect.y > platform_rect.y:
+                self.rect.y = platform_rect.y - self.rect.height
+                self.vel_y = 0
 
-
-
+    def verificar_colision(self, estructuras):
+            for estructura in estructuras:
+                if self.rect.colliderect(estructura.get_rect()):
+                    return True
+            return False

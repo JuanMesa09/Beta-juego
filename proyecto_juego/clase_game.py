@@ -38,8 +38,8 @@ class Game():
         font = pg.font.Font(None, 36)
         tiempo_duracion_derrota = 4000
         
-        estructura1 = Estructura(100, 100, 50, 50, r'./imagenes/img_plataformas/plataforma_1.png')
-        estructura2 = Estructura(300, 100, 50, 50, r'./imagenes/img_plataformas/plataforma_1.png')
+        estructura1 = Estructura(100, 250, 50, 50, r'./imagenes/img_plataformas/plataforma_1.png')
+        estructura2 = Estructura(300, 250, 50, 50, r'./imagenes/img_plataformas/plataforma_1.png')
 
         enemigo = Enemigo((0, 350))
 
@@ -48,7 +48,7 @@ class Game():
 
         while juego_ejecutandose:
             lista_eventos = []
-            pg.mixer.music.play(-1) 
+            #pg.mixer.music.play(-1) 
             delta_ms = retardo.tick(FPS)
 
             pg.time.delay(30)
@@ -76,7 +76,9 @@ class Game():
             
             tiempo_juego = font.render(f"Tiempo Restante {tiempo_restante}", True, (0,0,0))
             
-
+            for estructura in [estructura1, estructura2]:
+                if luffy.verificar_colision([estructura]):
+                    luffy.ajustar_a_plataforma(estructura.get_rect())
             
             pantalla.blit(fondo, fondo.get_rect())
             pantalla.blit(tiempo_juego,(ANCHO_VENTANA//2, 10))
@@ -93,7 +95,7 @@ class Game():
             enemigo.update()
             pg.display.update()
             
-        juego.parar_musica() 
+        #juego.parar_musica() 
     pg.quit()
 
 
