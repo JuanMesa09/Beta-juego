@@ -90,7 +90,8 @@ class Jugador():
         if self.cd_disparo == 0:
             if self.mirando_derecha:
                 return Proyectil(self.rect.centerx, self.rect.centery, "derecha")
-            elif not self.mirando_: 
+            
+            elif self.mirando_derecha:
                 return Proyectil(self.rect.centerx, self.rect.centery, "izquierda")
             self.cd_disparo = 10
         
@@ -116,7 +117,7 @@ class Jugador():
         
     def choque_enemigo(self):
         
-        self.perder_vidas()
+        self.perdida_de_vidas()
     
 
         
@@ -156,7 +157,7 @@ class Jugador():
                 self.rect.y = 300
                 self.en_el_aire = False
                 self.vel_y = 0
-            
+                
             #LIMITES para q no se salga
             if self.rect.left <= -1:
                 self.rect.left = -1
@@ -166,9 +167,9 @@ class Jugador():
                 self.rect.top = 0
             elif self.rect.bottom >= ALTO_VENTANA + 1:
                 self.rect.bottom = ALTO_VENTANA + 1
+            
 
     def teclas_presionadas(self, lista_eventos):
-
         
         for event in lista_eventos:
             if event.type == pg.KEYDOWN:
@@ -178,8 +179,6 @@ class Jugador():
                     self.animacion_disparo("derecha" if self.mirando_derecha else "izquierda")             
                     nuevo_proyectil = self.crear_proyectil()
                     self.bala_grupo.add(nuevo_proyectil)
-
-
         teclas = pg.key.get_pressed()
         if teclas[pg.K_d]:
             self.caminar('derecha')

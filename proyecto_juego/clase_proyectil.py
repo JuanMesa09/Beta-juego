@@ -15,17 +15,11 @@ class Proyectil(pygame.sprite.Sprite):
         self.direccion = direccion 
     
     def update(self):
-
-
-        if  self.direccion == "derecha":
-                
-                self.rect.x += 10
-                if self.rect.x >= ANCHO_VENTANA + 100:
-                    self.kill()
-                    
-        elif  self.direccion =="izquierda":
-
-                self.rect.x -= 10 
-                if self.rect.x >= ANCHO_VENTANA - 100:
-                    self.kill()
-        
+        if self.direccion == "derecha":
+            self.rect.x += 10
+            if self.rect.x >= ANCHO_VENTANA + 100:
+                self.kill()
+        elif self.direccion == "izquierda":
+            self.rect.x -= 10 
+            if self.rect.x <= -100:
+                self.kill()

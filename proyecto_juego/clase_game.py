@@ -32,7 +32,7 @@ class Game():
         fondo = pg.transform.scale(fondo, (ANCHO_VENTANA, ALTO_VENTANA))
         juego_ejecutandose = True
         
-        luffy = Jugador(0,ALTO_VENTANA, velocidad_caminar=10,  cuadros_por_segundo= 60)
+        luffy = Jugador(0,400, velocidad_caminar=10,  cuadros_por_segundo= 60)
 
         
         font = pg.font.Font(None, 36)
@@ -41,7 +41,7 @@ class Game():
         estructura1 = Estructura(100, 100, 50, 50, r'./imagenes/img_plataformas/plataforma_1.png')
         estructura2 = Estructura(300, 100, 50, 50, r'./imagenes/img_plataformas/plataforma_1.png')
 
-        enemigo = Enemigo((100, 200))
+        enemigo = Enemigo((0, 350))
 
         self.tiempo_inicial = pg.time.get_ticks()//1000 
         self.duracion_game =  10
