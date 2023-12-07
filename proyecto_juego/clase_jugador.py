@@ -6,7 +6,7 @@ from clase_sprite_sheet import SurfaceManager as sf
 
 class Jugador():
 
-    def __init__(self, posicion_x, posicion_y, velocidad_caminar, bala_grupo,cuadros_por_segundo):
+    def __init__(self, posicion_x, posicion_y, velocidad_caminar,cuadros_por_segundo):
         super().__init__()
         self.vidas = 3
         self.parado_derecha = sf.get_surface_from_spritesheet('./imagenes/img_jugador/standar/paradito_derecha_1.png', 7, 1)
@@ -34,10 +34,10 @@ class Jugador():
         self.direccion = "derecha"
         self.cd_disparo = 0
         self.jugador_reinicio = 0
-        self.bala_grupo = bala_grupo
+        self.bala_grupo = pg.sprite.Group()
         self.cuadros_por_segundo = cuadros_por_segundo
         self.jugador_tiempo_animacion = 0
-        self.animacion_disparo = False
+        self.animacion_disparo_activa = False
         self.tiempo_de_movimiento = 0
     
     def animaciones_enx_presstablecidas(self,movimiento_en_x,lista_animaciones:[pg.surface.Surface], bandera_mirando_derecha):
@@ -78,10 +78,11 @@ class Jugador():
                 self.vel_y = 0
 
 
-    def update(self, delta_ms):
+    def update(self, delta_ms, lista_eventos):
         self.actualizar_cd()
         self.hacer_animacion(delta_ms)
         self.hacer_movimiento(delta_ms)
+        self.teclas_presionadas(lista_eventos)
         #print(f"lista animacion acutal:  {self.actual_animacion}  numero de frame{self.marco_inicial}"  )
     
 
@@ -98,7 +99,8 @@ class Jugador():
             return proyectil
         
     def animacion_disparo(self, direccion):
-        self.animacion_disparo = True
+
+        self.animacion_disparo_activa = True
         self.cuadro_inicial = 0
         mirando_derecha = self.mirando_derecha
         match direccion:
@@ -169,6 +171,24 @@ class Jugador():
             elif self.rect.bottom >= ALTO_VENTANA + 1:
                 self.rect.bottom = ALTO_VENTANA + 1
 
+    def teclas_presionadas(self, lista_eventos):
+
+        
+        for event in lista_eventos:
+            if event.type == pg.KEYDOWN:
+                if event.key == pg.K_SPACE:
+                    self.salto()
+                elif event.key == pg.K_r:
+                        self.animacion_disparo("derecha" if self.mirando_derecha else "izquierda")
+                        self.bala_grupo.add(self.crear_proyectil())
+        teclas = pg.key.get_pressed()
+        if teclas[pg.K_d]:
+            self.caminar('derecha')
+        elif teclas[pg.K_a]:
+            self.caminar('izquierda')
+                
+        if not teclas[pg.K_d] and not teclas[pg.K_a]:
+            self.estatico()
 
 
 

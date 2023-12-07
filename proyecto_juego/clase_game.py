@@ -26,13 +26,13 @@ class Game():
         pg.mixer.music.load("sonidos/musica lvl.mp3")
 
         retardo = pg.time.Clock()
-        bala_grupo = pg.sprite.Group()
+        
 
         fondo = pg.image.load('./imagenes/img_fondo/goku_house.png')
         fondo = pg.transform.scale(fondo, (ANCHO_VENTANA, ALTO_VENTANA))
         juego_ejecutandose = True
         
-        luffy = Jugador(0,ALTO_VENTANA, velocidad_caminar=10, bala_grupo=bala_grupo, cuadros_por_segundo= 60)
+        luffy = Jugador(0,ALTO_VENTANA, velocidad_caminar=10,  cuadros_por_segundo= 60)
 
         
         font = pg.font.Font(None, 36)
@@ -47,21 +47,18 @@ class Game():
         self.duracion_game =  10
 
         while juego_ejecutandose:
+            lista_eventos = []
             pg.mixer.music.play(-1) 
             delta_ms = retardo.tick(FPS)
 
             pg.time.delay(30)
 
             for event in pg.event.get():
-                if event.type == pg.KEYDOWN:
-                    if event.key == pg.K_SPACE:
-                        luffy.salto()
-                    elif event.key == pg.K_r:
-                        luffy.animacion_disparo("derecha" if self.mirando_derecha else "izquierda")
                 if event.type == pg.QUIT:
                     juego_ejecutandose = False
                     break
-
+                    
+                lista_eventos.append(event)
 
             #tiempo transcurrido
             tiempo_actual =  pg.time.get_ticks() // 1000
@@ -74,14 +71,8 @@ class Game():
                 ##pantalla.blit(texto_derrota, (ANCHO_VENTANA // 1 - texto_derrota.get_width() // 1, ALTO_VENTANA // 1 - texto_derrota.get_height() // 1))
             #else: 
                 #pg.quit()
-            lista_teclas_presionadas = pg.key.get_pressed()
-            if lista_teclas_presionadas[pg.K_d]:
-                luffy.caminar('derecha')
-            elif lista_teclas_presionadas[pg.K_a]:
-                luffy.caminar('izquierda')
-                
-            if not lista_teclas_presionadas[pg.K_d] and not lista_teclas_presionadas[pg.K_a]:
-                luffy.estatico()
+            
+            
             
             tiempo_juego = font.render(f"Tiempo Restante {tiempo_restante}", True, (0,0,0))
             
@@ -92,12 +83,13 @@ class Game():
             
             estructura1.draw(pantalla)
             estructura2.draw(pantalla)
-            bala_grupo.draw(pantalla)
+            luffy.bala_grupo.draw(pantalla)
+            
             luffy.draw(pantalla)
             enemigo.draw(pantalla)
-            luffy.update(delta_ms)
+            luffy.update(delta_ms, lista_eventos)
             luffy.gravedad_activa()
-            bala_grupo.update()
+            luffy.bala_grupo.update()
             pg.display.update()
             
         juego.parar_musica() 
