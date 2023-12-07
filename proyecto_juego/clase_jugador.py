@@ -129,9 +129,12 @@ class Jugador():
     def draw(self, pantalla: pg.surface.Surface):
         if DEBUG:
             pg.draw.rect(pantalla, 'red', self.rect)
-        self.actual_animacion_imagen = self.actual_animacion[self.marco_inicial]
-        pantalla.blit(self.actual_animacion_imagen, self.rect)
+        if 0 <= self.marco_inicial < len(self.actual_animacion):
+            self.actual_animacion_imagen = self.actual_animacion[self.marco_inicial]
+            pantalla.blit(self.actual_animacion_imagen, self.rect)
+
         
+
     def hacer_animacion(self, delta_ms):
 
         self.jugador_tiempo_animacion += delta_ms
