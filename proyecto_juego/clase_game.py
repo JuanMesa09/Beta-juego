@@ -97,6 +97,7 @@ class Game():
             luffy.draw(pantalla)
             enemigo.draw(pantalla)
             luffy.update(delta_ms)
+            luffy.gravedad_activa(delta_ms)
             bala_grupo.update()
             pg.display.update()
             

@@ -3,7 +3,7 @@
 
 
 
-from clase_game import Game
+from clase_game import Game 
 
 
 if __name__ == "__main__":

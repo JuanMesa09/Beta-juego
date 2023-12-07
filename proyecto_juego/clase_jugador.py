@@ -14,7 +14,7 @@ class Jugador():
         self.correr_derecha = sf.get_surface_from_spritesheet('./imagenes/img_jugador/andar/correr_derecha.png', 8, 1)
         self.correr_izquierda = sf.get_surface_from_spritesheet('./imagenes/img_jugador/andar/correr_derecha.png', 8, 1, flip= True)
         self.suelo = ALTO_VENTANA
-        self.gravedad = 5
+        self.gravedad = 3
         self.inicio = self.parado_derecha
         self.marco_inicial = 0
         self.actual_animacion = self.parado_derecha
@@ -22,7 +22,7 @@ class Jugador():
         self.rect = self.actual_animacion_imagen.get_rect(midbottom= (200,200))
         self.en_el_aire = False
         self.vel_x = velocidad_caminar
-        self.vel_y = 0
+        self.vel_y = 10
         self.rect.x = posicion_x
         self.rect.y = posicion_y
         self.vel_salto = 10
@@ -48,7 +48,6 @@ class Jugador():
     def caminar(self, direccion):
         
         match direccion:
-
             case "derecha":
                 mirando_derecha = True
                 self.animaciones_enx_presstablecidas(self.vel_x, self.correr_derecha, bandera_mirando_derecha=mirando_derecha)
@@ -63,20 +62,20 @@ class Jugador():
             self.cuadro_inicial = 0
             
     def salto(self):
-
         if not self.en_el_aire:
-            self.velocidad_y = self.velocidad_salto
+            self.vel_y = -self.velocidad_salto
             self.en_el_aire = True
 
-    def gravedad_activa(self):
+    def gravedad_activa(self,delta_ms):
         if self.en_el_aire:
-            self.rect.y = self.vel_y
-            self.vel_y += self.gravedad
+            self.rect.y += self.vel_y  * 6
+            self.vel_y += self.gravedad 
+            
             #suelo
             if self.rect.y >= self.suelo:
-                self.rect.y -= self.suelo
+                self.rect.y = self.suelo
                 self.en_el_aire = False
-                self.vel_y -= 0
+                self.vel_y = 0
 
 
     def update(self, delta_ms):
@@ -113,22 +112,14 @@ class Jugador():
 
         if self.cd_disparo > 0:
             self.cd_disparo -= 1
-
-
-        
-    # def draw(self, pantalla: pg.surface.Surface):
-
-    #     if DEBUG:
-    #         pg.draw.rect(pantalla, 'red', self.rect)
         
     def draw(self, pantalla: pg.surface.Surface):
         if DEBUG:
             pg.draw.rect(pantalla, 'red', self.rect)
         self.actual_animacion_imagen = self.actual_animacion[self.marco_inicial]
         pantalla.blit(self.actual_animacion_imagen, self.rect)
-
-
     def hacer_animacion(self, delta_ms):
+
         self.jugador_tiempo_animacion += delta_ms
         if self.jugador_tiempo_animacion >= self.cuadros_por_segundo:
             self.jugador_tiempo_animacion = 0
@@ -141,14 +132,13 @@ class Jugador():
                 self.marco_inicial = 0
         
         
-
     def hacer_movimiento(self,delta_ms):
         
         self.tiempo_de_movimiento += delta_ms
         if self.tiempo_de_movimiento >= self.marco_inicial:#self.cuadros_por_segundo:
             self.tiempo_de_movimiento = 0
             
-
+        
             if self.rect.y > 300:
                 self.rect.y = 300
                 self.en_el_aire = False
