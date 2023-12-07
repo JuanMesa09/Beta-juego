@@ -90,6 +90,7 @@ class Game():
             luffy.update(delta_ms, lista_eventos)
             luffy.gravedad_activa()
             luffy.bala_grupo.update()
+            enemigo.update()
             pg.display.update()
             
         juego.parar_musica() 

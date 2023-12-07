@@ -89,29 +89,24 @@ class Jugador():
     def crear_proyectil(self):
         if self.cd_disparo == 0:
             if self.mirando_derecha:
-
-                proyectil = Proyectil(self.rect.centerx, self.rect.centery, "derecha")
-
-            elif not self.mirando_derecha:
-                proyectil = Proyectil(self.rect.centerx, self.rect.centery, "izquierda")
-            
+                return Proyectil(self.rect.centerx, self.rect.centery, "derecha")
+            elif not self.mirando_: 
+                return Proyectil(self.rect.centerx, self.rect.centery, "izquierda")
             self.cd_disparo = 10
-            return proyectil
+        
         
     def animacion_disparo(self, direccion):
-
         self.animacion_disparo_activa = True
         self.cuadro_inicial = 0
         mirando_derecha = self.mirando_derecha
         match direccion:
-            
             case "derecha":
                 
-                self.animaciones_enx_presstablecidas(self.velocidad_disparo, self.parado_derecha, bandera_mirando_derecha= not mirando_derecha)
+                self.animaciones_enx_presstablecidas(self.velocidad_disparo, self.parado_derecha, bandera_mirando_derecha= mirando_derecha)
             
             case "izquierda":
                 
-                self.animaciones_enx_presstablecidas(-self.velocidad_disparo, self.parado_izquierda, bandera_mirando_derecha=  mirando_derecha)
+                self.animaciones_enx_presstablecidas(-self.velocidad_disparo, self.parado_izquierda, bandera_mirando_derecha= not mirando_derecha)
                 
     
     def perdida_de_vidas(self):
@@ -135,6 +130,7 @@ class Jugador():
             pg.draw.rect(pantalla, 'red', self.rect)
         self.actual_animacion_imagen = self.actual_animacion[self.marco_inicial]
         pantalla.blit(self.actual_animacion_imagen, self.rect)
+        
     def hacer_animacion(self, delta_ms):
 
         self.jugador_tiempo_animacion += delta_ms
@@ -179,8 +175,11 @@ class Jugador():
                 if event.key == pg.K_SPACE:
                     self.salto()
                 elif event.key == pg.K_r:
-                        self.animacion_disparo("derecha" if self.mirando_derecha else "izquierda")
-                        self.bala_grupo.add(self.crear_proyectil())
+                    self.animacion_disparo("derecha" if self.mirando_derecha else "izquierda")             
+                    nuevo_proyectil = self.crear_proyectil()
+                    self.bala_grupo.add(nuevo_proyectil)
+
+
         teclas = pg.key.get_pressed()
         if teclas[pg.K_d]:
             self.caminar('derecha')
