@@ -57,9 +57,7 @@ class Game():
                     if event.key == pg.K_SPACE:
                         luffy.salto()
                     elif event.key == pg.K_r:
-                        print("piu piu")
-                        # luffy.crear_proyectil()
-                        # nueva_bala = luffy.crear_proyectil()
+                        luffy.animacion_disparo("derecha" if self.mirando_derecha else "izquierda")
                 if event.type == pg.QUIT:
                     juego_ejecutandose = False
                     break
@@ -81,6 +79,7 @@ class Game():
                 luffy.caminar('derecha')
             elif lista_teclas_presionadas[pg.K_a]:
                 luffy.caminar('izquierda')
+                
             if not lista_teclas_presionadas[pg.K_d] and not lista_teclas_presionadas[pg.K_a]:
                 luffy.estatico()
             
@@ -97,7 +96,7 @@ class Game():
             luffy.draw(pantalla)
             enemigo.draw(pantalla)
             luffy.update(delta_ms)
-            luffy.gravedad_activa(delta_ms)
+            luffy.gravedad_activa()
             bala_grupo.update()
             pg.display.update()
             

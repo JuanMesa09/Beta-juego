@@ -66,7 +66,7 @@ class Jugador():
             self.vel_y = -self.velocidad_salto
             self.en_el_aire = True
 
-    def gravedad_activa(self,delta_ms):
+    def gravedad_activa(self):
         if self.en_el_aire:
             self.rect.y += self.vel_y  * 6
             self.vel_y += self.gravedad 
@@ -82,21 +82,36 @@ class Jugador():
         self.actualizar_cd()
         self.hacer_animacion(delta_ms)
         self.hacer_movimiento(delta_ms)
-        print(f"lista animacion acutal:  {self.actual_animacion}  numero de frame{self.marco_inicial}"  )
+        #print(f"lista animacion acutal:  {self.actual_animacion}  numero de frame{self.marco_inicial}"  )
     
 
     def crear_proyectil(self):
         if self.cd_disparo == 0:
             if self.mirando_derecha:
+
                 proyectil = Proyectil(self.rect.centerx, self.rect.centery, "derecha")
+
             elif not self.mirando_derecha:
                 proyectil = Proyectil(self.rect.centerx, self.rect.centery, "izquierda")
             
             self.cd_disparo = 10
             return proyectil
-        else:
-            return None
-
+        
+    def animacion_disparo(self, direccion):
+        self.animacion_disparo = True
+        self.cuadro_inicial = 0
+        mirando_derecha = self.mirando_derecha
+        match direccion:
+            
+            case "derecha":
+                
+                self.animaciones_enx_presstablecidas(self.velocidad_disparo, self.parado_derecha, bandera_mirando_derecha= not mirando_derecha)
+            
+            case "izquierda":
+                
+                self.animaciones_enx_presstablecidas(-self.velocidad_disparo, self.parado_izquierda, bandera_mirando_derecha=  mirando_derecha)
+                
+    
     def perdida_de_vidas(self):
         self.vidas -= 1
         if self.vidas <= 0:
