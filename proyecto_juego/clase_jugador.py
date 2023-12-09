@@ -39,6 +39,7 @@ class Jugador():
         self.jugador_tiempo_animacion = 0
         self.animacion_disparo_activa = False
         self.tiempo_de_movimiento = 0
+        self.retorno = None
     
     def animaciones_enx_presstablecidas(self,movimiento_en_x,lista_animaciones:[pg.surface.Surface], bandera_mirando_derecha):
         self.rect.x += movimiento_en_x
@@ -49,26 +50,28 @@ class Jugador():
         
         match direccion:
             case "derecha":
-                mirando_derecha = True
-                self.animaciones_enx_presstablecidas(self.vel_x, self.correr_derecha, bandera_mirando_derecha=mirando_derecha)
+                self.mirando_derecha = True
+                self.animaciones_enx_presstablecidas(self.vel_x, self.correr_derecha, bandera_mirando_derecha=self.mirando_derecha)
                 
             case "izquierda":
-                mirando_derecha = False
-                self.animaciones_enx_presstablecidas(-self.vel_x, self.correr_izquierda, bandera_mirando_derecha= mirando_derecha)
+                self.mirando_derecha = False
+                self.animaciones_enx_presstablecidas(-self.vel_x, self.correr_izquierda, bandera_mirando_derecha= self.mirando_derecha)
 
     def estatico(self):
         if self.actual_animacion != self.parado_izquierda and self.actual_animacion != self.parado_derecha:
             self.actual_animacion = self.parado_derecha if self.mirando_derecha else self.parado_izquierda
             self.cuadro_inicial = 0
             
-    def salto(self):
+    def salto(self, estructuras):
         if not self.en_el_aire:
             self.vel_y = -self.velocidad_salto
             self.en_el_aire = True
+        elif self.verificar_colision(estructuras) :
+            self.en_el_aire = False
 
     def gravedad_activa(self):
         if self.en_el_aire:
-            self.rect.y += self.vel_y  * 6
+            self.rect.y += self.vel_y  * 5
             self.vel_y += self.gravedad 
             
             #suelo
@@ -78,37 +81,45 @@ class Jugador():
                 self.vel_y = 0
 
 
-    def update(self, delta_ms, lista_eventos):
+    def update(self, delta_ms, lista_eventos, pantalla, estructuras):
         self.actualizar_cd()
         self.hacer_animacion(delta_ms)
         self.hacer_movimiento(delta_ms)
-        self.teclas_presionadas(lista_eventos)
+        self.teclas_presionadas(lista_eventos, estructuras)
+        self.bala_grupo.draw(pantalla)
+        self.bala_grupo.update()
+        #self.salto(estructuras)
         #print(f"lista animacion acutal:  {self.actual_animacion}  numero de frame{self.marco_inicial}"  )
     
 
-    def crear_proyectil(self):
-        if self.cd_disparo == 0:
-            if self.mirando_derecha:
-                return Proyectil(self.rect.centerx, self.rect.centery, "derecha")
+    def crear_proyectil(self, direccion):
+        
+        
+        if direccion == "derecha":
+                
+            print("disparo a la derecha")
+            return Proyectil(self.rect.centerx, self.rect.centery, "derecha")
             
-            elif self.mirando_derecha:
-                return Proyectil(self.rect.centerx, self.rect.centery, "izquierda")
-            self.cd_disparo = 10
+        elif direccion == "izquierda":
+            print("disparo a la izquierda")
+            return Proyectil(self.rect.centerx, self.rect.centery, "izquierda" )
+            #self.cd_disparo = 10
         
         
     def animacion_disparo(self, direccion):
         self.animacion_disparo_activa = True
         self.cuadro_inicial = 0
-        mirando_derecha = self.mirando_derecha
+        
         match direccion:
             case "derecha":
                 
-                self.animaciones_enx_presstablecidas(self.velocidad_disparo, self.parado_derecha, bandera_mirando_derecha= mirando_derecha)
-            
+                self.animaciones_enx_presstablecidas(self.velocidad_disparo, self.parado_derecha, "derecha")
+                print("miro a la derecha")
             case "izquierda":
-                
-                self.animaciones_enx_presstablecidas(-self.velocidad_disparo, self.parado_izquierda, bandera_mirando_derecha= not mirando_derecha)
-                
+                print("miro a la izquierda")
+                self.animaciones_enx_presstablecidas(-self.velocidad_disparo, self.parado_izquierda, "izquierda")
+                #print("miro a la izquierda")
+
     
     def perdida_de_vidas(self):
         self.vidas -= 1
@@ -172,36 +183,43 @@ class Jugador():
                 self.rect.bottom = ALTO_VENTANA + 1
             
 
-    def teclas_presionadas(self, lista_eventos):
+    def teclas_presionadas(self, lista_eventos, estructuras):
         
         for event in lista_eventos:
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_SPACE:
-                    self.salto()
+                    self.salto(estructuras)
                 elif event.key == pg.K_r:
                     self.animacion_disparo("derecha" if self.mirando_derecha else "izquierda")             
-                    nuevo_proyectil = self.crear_proyectil()
+                    nuevo_proyectil = self.crear_proyectil(self.direccion)
                     self.bala_grupo.add(nuevo_proyectil)
         teclas = pg.key.get_pressed()
         if teclas[pg.K_d]:
+            self.mirando_derecha = True
             self.caminar('derecha')
+            self.direccion = "derecha"
         elif teclas[pg.K_a]:
+            self.mirando_derecha = False
             self.caminar('izquierda')
-                
+            self.direccion = "izquierda"
+            
         if not teclas[pg.K_d] and not teclas[pg.K_a]:
             self.estatico()
+
     def ajustar_a_plataforma(self, platform_rect):
             # Ajusta la posición y la velocidad vertical del jugador según la plataforma
             if self.rect.colliderect(platform_rect) and self.rect.y < platform_rect.y:
                 self.rect.y = platform_rect.y - self.rect.height
                 self.vel_y = 0
-            
+                #self.en_el_aire = False
             elif self.rect.colliderect(platform_rect) and self.rect.y > platform_rect.y:
                 self.rect.y = platform_rect.y - self.rect.height
                 self.vel_y = 0
-
+                #self.en_el_aire = False
+                
     def verificar_colision(self, estructuras):
             for estructura in estructuras:
                 if self.rect.colliderect(estructura.get_rect()):
+                    
                     return True
             return False

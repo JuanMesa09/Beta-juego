@@ -11,7 +11,9 @@ if __name__ == "__main__":
     juego.correr_nivel("lvl_1")
 
 
-
+#problema con disparo en ambas direcciones
+#problema con saltar sobre una estructura
+#problema con animacion de mov de enemigo
 
 
 
