@@ -18,5 +18,7 @@ class Puntaje():
     def  obtener_puntaje(self):
         return self.puntaje
 
+    def destruir_trampa(self, puntuacion):
 
+        self.puntaje += puntuacion
 
