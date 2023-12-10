@@ -235,3 +235,6 @@ class Jugador():
                     
                     return True
             return False
+    def agarrar_vida(self):
+
+        self.vidas += 1

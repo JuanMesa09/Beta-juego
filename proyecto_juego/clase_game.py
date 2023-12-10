@@ -10,6 +10,7 @@ from clase_enemigo import Enemigo
 from clase_puntaje import Puntaje
 from clase_item import Item
 from clase_vida import Vida
+
 class Game():
 
     def __init__(self) :
@@ -46,9 +47,9 @@ class Game():
         
 
         item_puntaje_1 = Item(r'imagenes\img_items\item_puntos\puntajee.png',80 ,190, 40,40)
-        item_puntaje_2 = Item(r'imagenes\img_items\item_puntos\puntajee.png',370 ,190, 40,40)
-        grupo_items.add(item_puntaje_1, item_puntaje_2)
-        lista_items = [item_puntaje_1, item_puntaje_2]
+        item_vida_1 = Item(r'imagenes\img_items\item_vida\vidita.png',370 ,190, 40,40)
+        grupo_items.add(item_puntaje_1, item_vida_1)
+        lista_items = [item_puntaje_1, item_vida_1]
 
 
         
@@ -125,7 +126,11 @@ class Game():
             #colision jugador con item
             colision_con_item = pg.sprite.spritecollide(self.luffy, grupo_items, True)
             for item in colision_con_item:
-                self.puntaje.agarrar_item(item.puntaje)
+                if item == item_puntaje_1:
+                    self.puntaje.agarrar_item(item.puntaje)
+                elif item == item_vida_1:
+                    self.luffy.agarrar_vida()
+
 
 
 

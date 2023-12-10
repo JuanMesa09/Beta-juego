@@ -1,11 +1,13 @@
 
 import pygame as pg 
 
-class Puntaje:
 
+class Puntaje():
+    
     def __init__(self):
+        super().__init__()
         self.puntaje = 0
-
+    
     
     def muerte_enemiga(self, puntuacion):
         self.puntaje += puntuacion
@@ -16,6 +18,5 @@ class Puntaje:
     def  obtener_puntaje(self):
         return self.puntaje
 
-    def obtener_item_vida(self):
 
-        self.vida +=  1
+

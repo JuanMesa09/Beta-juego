@@ -7,7 +7,7 @@ class Nivel:
     def __init__(self, screen: pg.surface.Surface, width, height, nombre_lvl):
         self.nombre_nivel = nombre_lvl  
         self.configuraciones = abrir_config().get(nombre_lvl)
-        self.configuraciones_jugador = self.configuraciones.get('player')
+        #self.configuraciones_jugador = self.configuraciones.get('player')
         #self.jugador_sprite = Jugador(coord_x=0, coord_y=0,  velocidad_caminar=20)
         #self.__music_path = self.configuraciones['nivel']['musica_fondo'] 
         #self.cargar_music()
