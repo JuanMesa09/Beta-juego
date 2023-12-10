@@ -11,7 +11,6 @@ class Enemigo(pg.sprite.Sprite):
         super().__init__()
         self.camina_derecha = sf.get_surface_from_spritesheet('imagenes/img_enemy/enemy_1/enem_caminar_derecha.png', 5, 1)
         self.camina_izquierda = sf.get_surface_from_spritesheet('imagenes/img_enemy/enemy_1/enem_caminar_izquierda.png', 5, 1)
-        self.ataque = sf.get_surface_from_spritesheet('imagenes/img_enemy/enemy_1/enem_atack.png', 4, 1)
         self.image = self.camina_izquierda[0]
         self.images_izquierda = self.camina_izquierda
         self.images_derecha = self.camina_derecha

@@ -13,8 +13,7 @@ class Vida(pg.sprite.Sprite):
         self.rect = pg.Rect(x, y, ancho, alto)
         self.vidas = Jugador.self.vidas
     
-    def get_rect(self):
-        return self.rect
+
     
 
     def draw(self, pantalla): 

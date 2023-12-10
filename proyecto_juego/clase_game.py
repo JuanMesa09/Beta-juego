@@ -21,9 +21,15 @@ class Game():
 
     def correr_nivel(self, nombre_nivel):
 
+        self.icono_vida =pg.transform.scale(pg.image.load(r'./imagenes\vidas\vida_mate.png'), (25,25))
+        self.rect = self.icono_vida.get_rect()
+        
         pg.init()
         pantalla = pg.display.set_mode((ANCHO_VENTANA, ALTO_VENTANA))
+
         
+
+
         titulo = pg.display.set_caption("El paseo de Luffy")
         font = pg.font.Font(None, 36)
         juego = Nivel(pantalla, ANCHO_VENTANA, ALTO_VENTANA, nombre_nivel)
@@ -46,8 +52,9 @@ class Game():
         
         
 
+
         item_puntaje_1 = Item(r'imagenes\img_items\item_puntos\puntajee.png',80 ,190, 40,40)
-        item_vida_1 = Item(r'imagenes\img_items\item_vida\vidita.png',370 ,190, 40,40)
+        item_vida_1 = Item(r'imagenes\vidas\vida_mate.png',370 ,190, 40,40)
         grupo_items.add(item_puntaje_1, item_vida_1)
 
         trampa_1 = Trampa(r'imagenes\trampas\pinches.png', 300,315 , 30, 30)
@@ -120,7 +127,7 @@ class Game():
             #tiempo de juego
             tiempo_juego = font.render(f"Tiempo Restante {tiempo_restante}", True, (0,0,0))
             texto_puntaje = font.render(f"Puntaje: {self.puntaje.obtener_puntaje()}", True, (0,0,0))
-            texto_vidas = font.render(f"Vidas: {self.luffy.vidas}", True, (0,0,0))
+            texto_vidas = font.render(f"x: {self.luffy.vidas}", True, (0,0,0))
             
             #colision enemigos con balas y estructuras
             for bala in self.luffy.bala_grupo:
@@ -226,9 +233,9 @@ class Game():
             self.luffy.gravedad_activa()
             
             
-            
+            pantalla.blit(self.icono_vida,(0, 35))
             pantalla.blit(texto_puntaje, (10, 15))
-            pantalla.blit(texto_vidas, (20,35))
+            pantalla.blit(texto_vidas, (25,35))
             grupo_items.update()
             grupo_enemigos.update()
             grupo_trampas.update()

@@ -6,42 +6,51 @@
     "nivel_1":{
         "nivel":{  
         "fondo": "./image/img_fondo/goku_house.png",
-        "musica_fondo": "sounds/musica lvl.mp3",
-        "musica_derrota": "valor",
+        "musica_fondo": "musica lvl.mp3",
+        "sonido_disparo": "./sonidos/audio_disp.mp3",
+        "sonido_salto": "./sonidos/audio_salt.mp3",
         "cantidad_vidas": 3,
         "cantidad_trampas": 1,
         "cantidad_enemigos": 2,
         "cantidad_items": 2,
         "tiempo_nivel_1": 100
+
     },
     "jugador":{
 
         "imagen_parado_derecha": "./imagenes/img_jugador/standar/paradito_derecha_1.png",
         "imagen_parado_izquierda": "./imagenes/img_jugador/standar/paradito_derecha_1.png",
+        "cantidad_fila_caminar_derecha": 7,
         "imagen_corriendo_derecha": "./imagenes/img_jugador/andar/correr_derecha.png",
-        "imagen_corriendo_izquierda": "./imagenes/img_jugador/andar/correr_derecha.png"
+        "imagen_corriendo_izquierda": "./imagenes/img_jugador/andar/correr_derecha.png",
+        "cantidad_fila_corriendo": 8,
+        "cantidad_filas": 1,
+        "velocidad_caminar": 5,
+        "cuadros_por_seg": 60
         },
     "enemigo":{
 
         "enemigo_derecha": "imagenes/img_enemy/enemy_1/enem_caminar_derecha.png",
         "enemigo_izquierda": "imagenes/img_enemy/enemy_1/enem_caminar_izquierda.png",
+        "cantidad_fila": 1,
+        "cantidad_columnas": 5,
         "posicion_x": "300",
         "posicion_y": "350"
 
-            },
+        },
     "items":{
         "imagen_item": "imagenes/img_items/item_puntos/puntajee.png",
         "ancho": "40",
         "alto": "40",
-        "item_1": {"x":80, "y":190}
+        "item_1": {"x":80, "y":190},
+        "puntaje": 100
         
         },
     "item_vida": {
 
-        "imagen":"valro",
+        "imagen":"imagenes/vidas/vida_mate.png",
         "item_vida": {"x":530, "y":190},
-
-        "cantidad_vida_que_da": "valor"
+        "cantidad_vida_que_da": 1
         },
     "estructuras":{
         "imagen": "./sprites_juego/Plataformas/piedras.png",
@@ -51,7 +60,6 @@
         "plataforma_2":{"x":150, "y":200},
         "plataforma_3":{"x":400, "y":200},
         "plataforma_4":{"x":450, "y":200}
-
     }
     }
     
