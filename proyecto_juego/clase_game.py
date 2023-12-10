@@ -50,7 +50,7 @@ class Game():
         item_vida_1 = Item(r'imagenes\img_items\item_vida\vidita.png',370 ,190, 40,40)
         grupo_items.add(item_puntaje_1, item_vida_1)
 
-        trampa_1 = Trampa(r'imagenes\trampas\pinchos.png', 300,315 , 50, 50)
+        trampa_1 = Trampa(r'imagenes\trampas\pinches.png', 300,315 , 30, 30)
 
         grupo_trampas.add(trampa_1)
         
@@ -85,7 +85,7 @@ class Game():
         
 
         self.tiempo_inicial = pg.time.get_ticks()//1000 
-        self.duracion_game =  10
+        self.duracion_game =  40
 
         while juego_ejecutandose:
             lista_eventos = []
@@ -106,13 +106,16 @@ class Game():
             tiempo_transcurrido = tiempo_actual - self.tiempo_inicial
             tiempo_restante = max(0, self.duracion_game - tiempo_transcurrido)
             
-            #if tiempo_transcurrido >= self.duracion_game:
-                #pantalla.fill((0, 0, 0))
-                #texto_derrota = font.render(f"Tiempo Terminado DERRORTA", True, (255,255,255))
-                ##pantalla.blit(texto_derrota, (ANCHO_VENTANA // 1 - texto_derrota.get_width() // 1, ALTO_VENTANA // 1 - texto_derrota.get_height() // 1))
-            #else: 
-                #pg.quit()
-            
+            if tiempo_transcurrido >= self.duracion_game:
+                juego_ejecutandose =  False
+                pantalla.fill((0, 0, 0))
+                texto_victoria = font.render(f"Tiempo Terminado DERRORTA", True, (255,255,255))
+                texto_puntaje_victoria = font.render(f"Puntaje: {self.puntaje.obtener_puntaje()}", True, (255,255,255))
+                pantalla.blit(texto_puntaje_victoria,(100, ALTO_VENTANA // 2))
+                pantalla.blit(texto_victoria, (ANCHO_VENTANA // 2 - texto_victoria.get_width() // 1, ALTO_VENTANA // 2 - texto_victoria.get_height() // 1))
+                pg.display.flip()
+                pg.time.delay(3000)
+
             
             #tiempo de juego
             tiempo_juego = font.render(f"Tiempo Restante {tiempo_restante}", True, (0,0,0))
@@ -124,14 +127,19 @@ class Game():
                 colision_bala_con_enemigo = pg.sprite.spritecollide(bala, grupo_enemigos, True)
                 
                 
-
                 for enemigo in colision_bala_con_enemigo:
                     self.puntaje.muerte_enemiga(enemigo.puntaje)
                     bala.kill()
                     
-                    if  len(grupo_enemigos) < 1:
-                        juego_ejecutandose =  False
-                        print("ganaste gordo")
+                if  len(grupo_enemigos) < 1:
+                    juego_ejecutandose =  False
+                    pantalla.fill((0, 0, 0))
+                    texto_victoria = font.render(f"Has logrado la... VICTORIA SOS CRACK", True, (255,255,255))
+                    texto_puntaje_victoria = font.render(f"Puntaje: {self.puntaje.obtener_puntaje()}", True, (255,255,255))
+                    pantalla.blit(texto_puntaje_victoria,(0, ALTO_VENTANA // 2))
+                    pantalla.blit(texto_victoria, (480 - texto_victoria.get_width() // 1, ALTO_VENTANA // 2 - texto_victoria.get_height() // 1))
+                    pg.display.flip()
+                    pg.time.delay(3000)
 
                 
                 #colision bala con estructura
@@ -169,21 +177,35 @@ class Game():
             #persona con enemigo colision
             colision_personaje_con_enemigo = pg.sprite.spritecollide(self.luffy, grupo_enemigos, False)
             for colision in colision_personaje_con_enemigo:
-                if self.luffy.vidas < 1:
-                    juego_ejecutandose = False
-                    print("GAME OVER")
+                
                 if not self.luffy.invulnerable:
                     self.luffy.perdida_de_vidas()
+            if self.luffy.vidas < 1:
+                    juego_ejecutandose = False
+                    pantalla.fill((0, 0, 0))
+                    texto_victoria = font.render(f"Te han Matado... DERRORTA", True, (255,255,255))
+                    texto_puntaje_victoria = font.render(f"Puntaje: {self.puntaje.obtener_puntaje()}", True, (255,255,255))
+                    pantalla.blit(texto_puntaje_victoria,(100, ALTO_VENTANA // 2))
+                    pantalla.blit(texto_victoria, (ANCHO_VENTANA // 2 - texto_victoria.get_width() // 1, ALTO_VENTANA // 2 - texto_victoria.get_height() // 1))
+                    pg.display.flip()
+                    pg.time.delay(3000)
 
             
             #colision jugador con trampa
             colision_jugador_con_trampa = pg.sprite.spritecollide(self.luffy, grupo_trampas, False)
             for trampa in colision_jugador_con_trampa:
-                if self.luffy.vidas < 1:
-                    juego_ejecutandose = False
-                    print("GAME OVER")
+                
                 if not self.luffy.invulnerable:
                     self.luffy.perdida_de_vidas()
+            if self.luffy.vidas < 1:
+                    juego_ejecutandose = False
+                    pantalla.fill((0, 0, 0))
+                    texto_victoria = font.render(f"Te han Matado... DERRORTA", True, (255,255,255))
+                    texto_puntaje_victoria = font.render(f"Puntaje: {self.puntaje.obtener_puntaje()}", True, (255,255,255))
+                    pantalla.blit(texto_puntaje_victoria,(100, ALTO_VENTANA // 2))
+                    pantalla.blit(texto_victoria, (ANCHO_VENTANA // 2 - texto_victoria.get_width() // 1, ALTO_VENTANA // 2 - texto_victoria.get_height() // 1))
+                    pg.display.flip()
+                    pg.time.delay(3000)
             
 
 
