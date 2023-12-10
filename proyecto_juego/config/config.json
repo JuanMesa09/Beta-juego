@@ -1,39 +1,59 @@
 
 
 {   
-    "lvl_1": {
+
+    "tiempo_de_juego":30,
+    "nivel_1":{
         "nivel":{  
         "fondo": "./image/img_fondo/goku_house.png",
         "musica_fondo": "sounds/musica lvl.mp3",
-        "maximo_enemigos": "valor",
-        "puntos_vida_enemigo": "valor",
-        "cantidad_vidas": "valor",
-        "tiempo_total": "valor"
-
+        "musica_derrota": "valor",
+        "cantidad_vidas": 3,
+        "cantidad_trampas": 1,
+        "cantidad_enemigos": 2,
+        "cantidad_items": 2,
+        "tiempo_nivel_1": 100
     },
     "jugador":{
 
-        "imagen_jugador": "image",
-        "poder_salto": "valor",
-        "gravedad": "valor",
-        "velocidad_caminar": "valor",
-        "vidas": "valor",
-        "fotogramas": "valor",
-        "foto_tiros": "valor",
-        "enfriamiento_tiros": "valor"
+        "imagen_parado_derecha": "./imagenes/img_jugador/standar/paradito_derecha_1.png",
+        "imagen_parado_izquierda": "./imagenes/img_jugador/standar/paradito_derecha_1.png",
+        "imagen_corriendo_derecha": "./imagenes/img_jugador/andar/correr_derecha.png",
+        "imagen_corriendo_izquierda": "./imagenes/img_jugador/andar/correr_derecha.png"
+        },
+    "enemigo":{
 
-        }
+        "enemigo_derecha": "imagenes/img_enemy/enemy_1/enem_caminar_derecha.png",
+        "enemigo_izquierda": "imagenes/img_enemy/enemy_1/enem_caminar_izquierda.png",
+        "posicion_x": "300",
+        "posicion_y": "350"
+
+            },
+    "items":{
+        "imagen_item": "imagenes/img_items/item_puntos/puntajee.png",
+        "ancho": "40",
+        "alto": "40",
+        "item_1": {"x":80, "y":190}
+        
+        },
+    "item_vida": {
+
+        "imagen":"valro",
+        "item_vida": {"x":530, "y":190},
+
+        "cantidad_vida_que_da": "valor"
+        },
+    "estructuras":{
+        "imagen": "./sprites_juego/Plataformas/piedras.png",
+        "ancho": 40, 
+        "alto":40,
+        "plataforma_1":{"x":100, "y":200},
+        "plataforma_2":{"x":150, "y":200},
+        "plataforma_3":{"x":400, "y":200},
+        "plataforma_4":{"x":450, "y":200}
+
     }
-
-
-
-
-
-
-
-
-
-
-
+    }
+    
 
 }
