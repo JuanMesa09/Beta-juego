@@ -25,7 +25,9 @@ class Game():
         font = pg.font.Font(None, 36)
         juego = Nivel(pantalla, ANCHO_VENTANA, ALTO_VENTANA, nombre_nivel)
         #juego.cargar_musica()
-        pg.mixer.music.load("sonidos/musica lvl.mp3")
+        #pg.mixer.music.load("sonidos/musica lvl.mp3")
+
+        
 
         retardo = pg.time.Clock()
         
@@ -136,8 +138,24 @@ class Game():
                     #self.luffy.rect.y = estructura.rect.y - self.luffy.rect.height
                     #self.luffy.en_el_aire = False
                     
+            #colision personaje con restangulo enemigo
+
+            if self.luffy.invulnerable:
+                tiempo_transcurrido = pg.time.get_ticks() - self.luffy.tiempo_invulnerable_actual
+                if tiempo_transcurrido >= self.luffy.tiempo_invulnerable:
+                    self.luffy.invulnerable = False
+                
+            colision_personaje_con_enemigo = pg.sprite.spritecollide(self.luffy, grupo_enemigos, False)
+            for colision in colision_personaje_con_enemigo:
+                if self.luffy.vidas < 1:
+                    juego_ejecutandose = False
+                    print("GAME OVER")
+                if not self.luffy.invulnerable:
+                    self.luffy.perdida_de_vidas()
+                    
 
 
+                
 
             pantalla.blit(fondo, fondo.get_rect())
             pantalla.blit(tiempo_juego,(ANCHO_VENTANA//2, 10))

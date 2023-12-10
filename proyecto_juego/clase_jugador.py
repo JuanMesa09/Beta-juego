@@ -40,6 +40,11 @@ class Jugador():
         self.animacion_disparo_activa = False
         self.tiempo_de_movimiento = 0
         self.retorno = None
+        self.sonido_disparo = pg.mixer.Sound(r"./sonidos\audio_disp.mp3")
+        self.sonido_salto = pg.mixer.Sound(r"./sonidos\audio_salt.mp3")
+        self.tiempo_invulnerable = 2000  #en mili seg
+        self.invulnerable = False
+        self.tiempo_invulnerable_actual = 0
     
     def animaciones_enx_presstablecidas(self,movimiento_en_x,lista_animaciones:[pg.surface.Surface], bandera_mirando_derecha):
         self.rect.x += movimiento_en_x
@@ -88,7 +93,8 @@ class Jugador():
         self.teclas_presionadas(lista_eventos, estructuras)
         self.bala_grupo.draw(pantalla)
         self.bala_grupo.update()
-        #self.salto(estructuras)
+        
+        
         #print(f"lista animacion acutal:  {self.actual_animacion}  numero de frame{self.marco_inicial}"  )
     
 
@@ -122,9 +128,11 @@ class Jugador():
 
     
     def perdida_de_vidas(self):
-        self.vidas -= 1
-        if self.vidas <= 0:
-            print("GAME OVER")
+        if not self.invulnerable:
+            self.vidas -= 1
+            self.invulnerable = True
+            self.tiempo_invulnerable_actual = pg.time.get_ticks()
+
         
     def choque_enemigo(self):
         
@@ -189,10 +197,14 @@ class Jugador():
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_SPACE:
                     self.salto(estructuras)
+                    self.sonido_salto.set_volume(0.15)
+                    self.sonido_salto.play()
                 elif event.key == pg.K_r:
                     self.animacion_disparo("derecha" if self.mirando_derecha else "izquierda")             
                     nuevo_proyectil = self.crear_proyectil(self.direccion)
                     self.bala_grupo.add(nuevo_proyectil)
+                    self.sonido_disparo.set_volume(0.15)
+                    self.sonido_disparo.play()
         teclas = pg.key.get_pressed()
         if teclas[pg.K_d]:
             self.mirando_derecha = True
