@@ -27,11 +27,8 @@ class Game():
         titulo = pg.display.set_caption("El paseo de Luffy")
         font = pg.font.Font(None, 36)
         juego = Nivel(pantalla, ANCHO_VENTANA, ALTO_VENTANA, nombre_nivel)
-        #juego.cargar_musica()
-        #pg.mixer.music.load("sonidos/musica lvl.mp3")
-
         
-
+        
         retardo = pg.time.Clock()
         
 
@@ -56,7 +53,7 @@ class Game():
         trampa_1 = Trampa(r'imagenes\trampas\pinchos.png', 300,315 , 50, 50)
 
         grupo_trampas.add(trampa_1)
-        #lista_items = [item_puntaje_1, item_vida_1]
+        
 
 
         
@@ -65,7 +62,8 @@ class Game():
             y =  350
             enemigos = Enemigo((x,y))
             grupo_enemigos.add(enemigos)
-        
+
+
 
 
 
@@ -91,7 +89,7 @@ class Game():
 
         while juego_ejecutandose:
             lista_eventos = []
-            #pg.mixer.music.play(-1) 
+            
             delta_ms = retardo.tick(FPS)
 
             pg.time.delay(30)
@@ -116,22 +114,32 @@ class Game():
                 #pg.quit()
             
             
-            
+            #tiempo de juego
             tiempo_juego = font.render(f"Tiempo Restante {tiempo_restante}", True, (0,0,0))
             texto_puntaje = font.render(f"Puntaje: {self.puntaje.obtener_puntaje()}", True, (0,0,0))
             texto_vidas = font.render(f"Vidas: {self.luffy.vidas}", True, (0,0,0))
+            
             #colision enemigos con balas y estructuras
             for bala in self.luffy.bala_grupo:
-                colision_bala = pg.sprite.spritecollide(bala, grupo_enemigos, True)
+                colision_bala_con_enemigo = pg.sprite.spritecollide(bala, grupo_enemigos, True)
                 
-                for enemigo in colision_bala:
+                
+
+                for enemigo in colision_bala_con_enemigo:
                     self.puntaje.muerte_enemiga(enemigo.puntaje)
                     bala.kill()
+                    
+                    if  len(grupo_enemigos) < 1:
+                        juego_ejecutandose =  False
+                        print("ganaste gordo")
 
+                
+                #colision bala con estructura
                 colision_bala_en_estructura =  pg.sprite.spritecollide(bala, lista_estructuras,False)
                 for estructura in colision_bala_en_estructura:
                     bala.kill()
 
+                #colision bala con trampa
                 colision_bala_trampa = pg.sprite.spritecollide(bala, grupo_trampas, True)
                 for trampa in colision_bala_trampa:
                     self.puntaje.destruir_trampa(trampa.puntaje)
@@ -145,26 +153,20 @@ class Game():
                 elif item == item_vida_1:
                     self.luffy.agarrar_vida()
 
-            
-            
-
 
             #colision de personaje con estructuras
             for estructura in lista_estructuras:
                 if self.luffy.verificar_colision([estructura]):
                     self.luffy.ajustar_a_plataforma(estructura.get_rect())
 
-                
-                    #self.luffy.rect.y = estructura.rect.y - self.luffy.rect.height
-                    #self.luffy.en_el_aire = False
-                    
-            #colision personaje con restangulo enemigo
 
+            #vulnerabilidad de personaje
             if self.luffy.invulnerable:
                 tiempo_transcurrido = pg.time.get_ticks() - self.luffy.tiempo_invulnerable_actual
                 if tiempo_transcurrido >= self.luffy.tiempo_invulnerable:
                     self.luffy.invulnerable = False
                 
+            #persona con enemigo colision
             colision_personaje_con_enemigo = pg.sprite.spritecollide(self.luffy, grupo_enemigos, False)
             for colision in colision_personaje_con_enemigo:
                 if self.luffy.vidas < 1:
@@ -172,7 +174,9 @@ class Game():
                     print("GAME OVER")
                 if not self.luffy.invulnerable:
                     self.luffy.perdida_de_vidas()
-                    
+
+            
+            #colision jugador con trampa
             colision_jugador_con_trampa = pg.sprite.spritecollide(self.luffy, grupo_trampas, False)
             for trampa in colision_jugador_con_trampa:
                 if self.luffy.vidas < 1:
@@ -180,8 +184,8 @@ class Game():
                     print("GAME OVER")
                 if not self.luffy.invulnerable:
                     self.luffy.perdida_de_vidas()
+            
 
-                
 
             pantalla.blit(fondo, fondo.get_rect())
             pantalla.blit(tiempo_juego,(ANCHO_VENTANA//2, 10))
@@ -190,7 +194,7 @@ class Game():
             estructura2.draw(pantalla)
             estructura3.draw(pantalla)
             estructura4.draw(pantalla)
-            #luffy.bala_grupo.draw(pantalla)
+            
             
             self.luffy.draw(pantalla)
             grupo_items.draw(pantalla)
@@ -198,8 +202,7 @@ class Game():
             grupo_trampas.draw(pantalla)
             self.luffy.update(delta_ms, lista_eventos, pantalla, lista_estructuras)
             self.luffy.gravedad_activa()
-            #luffy.bala_grupo.update(pantalla)
-            #enemigo.update()
+            
             
             
             pantalla.blit(texto_puntaje, (10, 15))
